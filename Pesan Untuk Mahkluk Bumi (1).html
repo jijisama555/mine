@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pesan Untuk Makhluk Bumi</title>
+  <style>
+    body {
+      font-family: 'Arial Black', cursive, sans-serif;
+      background: #000; /* hitam full background */
+      overflow: hidden;
+      margin: 0;
+      padding: 50px;
+      color: #00ff00;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      z-index: 2;
+      position: relative;
+    }
+    .choices {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+      z-index: 2;
+      position: relative;
+    }
+    .choice {
+      padding: 15px 25px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      background: #00ff66;
+      color: #000;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+      transition: 0.2s;
+    }
+    .choice:hover {
+      background: #00cc55;
+    }
+    .message-box {
+      margin-top: 30px;
+      font-size: 20px;
+      font-weight: bold;
+      min-height: 50px;
+      transition: opacity 0.5s;
+      z-index: 2;
+      position: relative;
+      color: #00ff00;
+    }
+    .closing {
+      display: none;
+      font-size: 80px;
+      font-weight: bold;
+      color: #00ff00;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 3;
+    }
+    .closing p {
+      margin: 15px 0;
+    }
+    .closing .big {
+      font-size: 200px;
+      color: #00ff99;
+    }
+    .alien {
+      position: absolute;
+      font-size: 24px;
+      animation: fall linear infinite;
+      pointer-events: none;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-50px); }
+      100% { transform: translateY(110vh); }
+    }
+  </style>
+</head>
+<body>
+  <h2 id="intro">Halo gimana harinya sejauh ini?<br>Aku mau kasih kamu tau sesuatu.<br>Mau tau apa ngga?</h2>
+  
+  <div class="choices" id="choices">
+    <button class="choice">Mau</button>
+    <button class="choice">MAU BANGET</button>
+    <button class="choice">NGGA USAH MAKASIH</button>
+  </div>
+
+  <div class="message-box" id="messageBox"></div>
+
+  <div class="closing" id="closing"></div>
+
+  <script>
+    const messages = [
+      "Jangan lupa bernafas ya kamu, kalo lupa, bahaya.....",
+      "Jangan lupa minum air putih, kalo perlu 1 galon habisin yaa",
+      "Jangan diforsir ya kerjaan kamu, nanti otakmu protes",
+      "Senyum dulu dong, biar makin mudah harimu",
+      "Makan ya, jangan cuma makan perasaan doang, tambahin bubuk besi dan semen biar kuat",
+      "Kalau lagi pusing, pause dulu bentar. Kamu bukan robot",
+      "Tidur yang cukup",
+      "Sholat jangan ditunda-tunda, mati ngga kenal waktu",
+      "Jangan lupa bahagia, itu vitamin paling murah",
+      "Pulangnya hati-hati, doa dulu terus pas di jalan dzikir",
+      "Dan yang terakhir, wherever you are, you should know that you are cherished",
+      "Oh masih ada lagi, mau mengingatkan isi Surat Keputusan Bersama Kerja Sama Partner in Crime",
+      "Pasal 2 ayat 1 dan Pasal 4 ayat 1 😇"
+    ];
+
+    const closingMessages = [
+      "Sekian dan terima gaji wkwkwkwk",
+      "with hate, Fawzya",
+      "<span class='big'>Mwahhhh</span>"
+    ];
+
+    let index = 0;
+    let intervalId = null;
+    const messageBox = document.getElementById("messageBox");
+    const buttons = document.querySelectorAll(".choice");
+    const choicesDiv = document.getElementById("choices");
+    const intro = document.getElementById("intro");
+    const closingDiv = document.getElementById("closing");
+    let closingIndex = 0;
+
+    function showMessage() {
+      messageBox.style.opacity = 0;
+      setTimeout(() => {
+        if (index < messages.length) {
+          messageBox.textContent = messages[index];
+          messageBox.style.opacity = 1;
+          index++;
+        } else {
+          clearInterval(intervalId);
+          // hilangkan intro, pilihan, dan messageBox
+          choicesDiv.style.display = 'none';
+          intro.style.display = 'none';
+          messageBox.style.display = 'none';
+          // tampilkan closing
+          showClosing();
+        }
+      }, 300);
+    }
+
+    function showClosing() {
+      closingDiv.style.display = 'block';
+      closingDiv.innerHTML = closingMessages[closingIndex];
+      closingIndex++;
+      if (closingIndex < closingMessages.length) {
+        setTimeout(showClosing, 3000);
+      }
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (!intervalId) {
+          showMessage();
+          intervalId = setInterval(showMessage, 4000); // 4 detik per pesan
+        }
+        // jalankan musik saat tombol pertama kali diklik
+        const music = document.getElementById("bg-music");
+        if (music.paused) {
+          music.play().catch(err => console.log("Autoplay blocked:", err));
+        }
+      });
+    });
+
+    // Alien shower full background
+    const alienCount = 50; // jumlah alien
+    for (let i = 0; i < alienCount; i++) {
+      const alien = document.createElement('div');
+      alien.classList.add('alien');
+      alien.textContent = '👽';
+      alien.style.left = Math.random() * 100 + 'vw';
+      alien.style.animationDuration = (3 + Math.random() * 5) + 's';
+      alien.style.fontSize = (16 + Math.random() * 32) + 'px';
+      document.body.appendChild(alien);
+    }
+  </script>
+
+  <!-- Musik latar -->
+  <audio id="bg-music" autoplay loop>
+    <source src="https://files.catbox.moe/4kpau2.mp3" type="audio/mpeg">
+    Browser kamu nggak support audio.
+  </audio>
+</body>
+</html>
